@@ -1,0 +1,16 @@
+{
+  "name": "js13k-2021",
+  "version": "1.0.0",
+  "description": "Submission for the js13k event",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alfi Sumadi",
+  "license": "MIT",
+  "dependencies": {
+    "kontra": "^7.2.0"
+  },
+  "devDependencies": {
+    "html-minifier": "^4.0.0"
+  }
+}
