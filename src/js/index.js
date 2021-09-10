@@ -1,11 +1,12 @@
 import {init, Sprite, GameLoop} from 'kontra';
+import colors from './colors'
 
 let { canvas } = init();
 
 let sprite = Sprite({
   x: 100,        // starting x,y position of the sprite
   y: 80,
-  color: 'green',  // fill color of the sprite rectangle
+  color: colors.skyblue,  // fill color of the sprite rectangle
   width: 20,     // width and height of the sprite rectangle
   height: 40,
   dx: 2          // move the sprite 2px to the right every frame
