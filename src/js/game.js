@@ -2,7 +2,7 @@ import { init, initKeys, keyMap, GameLoop, collides } from 'kontra';
 import colors from './colors';
 import Player from './player';
 import { bulletPool } from './bullet';
-import Enemy, { SineEnemy } from './enemy';
+import Enemy, { Simple, SineEnemy } from './enemy';
 
 //Kontra initialisation
 let { canvas, context } = init();
@@ -32,6 +32,7 @@ enemies.push(new SineEnemy({
 enemies.push(new SineEnemy({
     x: 650, y: canvas.height / 2, width: 15, height: 15, color: 'red', speed: 2, amplitude: 100, frequency: 4, angleDisplacement: 0
 }))
+enemies.push(new Simple({ x: canvas.width + 10, y: 50, width: 15, height: 15, color: 'blue', speed: 3 }))
 
 export const gameLoop = GameLoop({
     update: function (dt) {
@@ -48,7 +49,6 @@ export const gameLoop = GameLoop({
                     if (collides(bullet, enemy)) {
                         bullet.ttl = 0;
                         enemy.damage(bullet.damage);
-                        console.log(enemy.health)
                     }
                 })
             }

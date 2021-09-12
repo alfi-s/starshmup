@@ -15,6 +15,18 @@ export default class Enemy extends Sprite.class {
     }
 }
 
+export class Simple extends Enemy {
+    constructor(props) {
+        super(props)
+        this.dx = -this.speed;
+        this.health = 50;
+    }
+
+    update() {
+        this.advance();
+    }
+}
+
 export class SineEnemy extends Enemy {
     constructor(props) {
         super(props);
