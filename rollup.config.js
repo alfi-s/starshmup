@@ -10,7 +10,9 @@ export default {
     },
     plugins: [
         resolve(),
-        compiler(),
+        compiler({
+            compilation_level: "ADVANCED"
+        }),
         size()
     ]
 }

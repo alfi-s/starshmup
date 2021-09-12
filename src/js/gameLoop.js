@@ -1,19 +1,30 @@
 import { init, initKeys, keyMap, GameLoop, collides } from 'kontra';
 import colors from './colors';
-import GameManager from './gameManager'
+import Player from './player';
+import { bulletPool as bullets } from './bullet';
 
 // Kontra initialisation
 export let { canvas, context } = init();
 initKeys();
 keyMap['ShiftLeft'] = 'shift';
 
-let gameManager = new GameManager(canvas);
+
+let player = new Player({
+    x: 100,
+    y: canvas.height / 2,
+    width: 15,
+    height: 7,
+    speedHigh: 4,
+    speedLow: 2,
+    bulletTimerMax: 5
+});
+let enemies = [];
 
 // Main game loop
 export default GameLoop({
     update: function (dt) {
         // Handle bullet collision.
-        gameManager.bulletPool.getAliveObjects().forEach(bullet => {
+        bullets.getAliveObjects().forEach(bullet => {
             if (bullet.target == 'player') {
                 if (collides(bullet, player)) {
                     bullet.ttl = 0;
@@ -21,7 +32,7 @@ export default GameLoop({
                 }
             }
             if (bullet.target == 'enemy') {
-                gameManager.enemies.forEach(enemy => {
+                enemies.forEach(enemy => {
                     if (collides(bullet, enemy)) {
                         bullet.ttl = 0;
                         enemy.dmg(bullet.dmg);
@@ -31,11 +42,11 @@ export default GameLoop({
         })
 
         // Update the player.
-        gameManager.player.update(dt);
+        player.update(dt);
 
         // Update the enemies
-        gameManager.enemies = gameManager.enemies.filter(enemy => enemy.isAlive());
-        gameManager.enemies.forEach(enemy => {
+        enemies = enemies.filter(enemy => enemy.isAlive());
+        enemies.forEach(enemy => {
             if (collides(enemy, player)) {
                 player.health = 0;
             }
@@ -43,7 +54,7 @@ export default GameLoop({
         });
 
         // Update the bullets
-        gameManager.bulletPool.update();
+        bullets.update();
     },
 
     render: function () {
@@ -51,10 +62,10 @@ export default GameLoop({
         context.fillStyle = colors.bg;
         context.fillRect(0, 0, canvas.width, canvas.height);
 
-        gameManager.bulletPool.render();
+        bullets.render();
 
         // Render the player.
-        gameManager.player.render();
-        gameManager.enemies.forEach(enemy => enemy.render());
+        player.render();
+        enemies.forEach(enemy => enemy.render());
     }
 });

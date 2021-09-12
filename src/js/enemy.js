@@ -1,5 +1,4 @@
 import { Sprite } from "kontra";
-import { player } from './gameManager';
 
 export default class Enemy extends Sprite.class {
     constructor(props) {
@@ -41,7 +40,6 @@ export class SineEnemy extends Enemy {
         this.t = this.t + dt > 2 * Math.PI ? 0 : this.t + dt;
         this.y = this.amplitude * Math.sin((this.frequency * this.t) + this.angleDisplacement) + this.c;
         this.advance();
-        console.log(player.x, player.y)
     }
 
     isAlive() {
