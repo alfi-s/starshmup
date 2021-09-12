@@ -1,3 +1,3 @@
-import { gameLoop } from './js/game';
+import game from './js/gameLoop';
 
-gameLoop.start();
+game.start();

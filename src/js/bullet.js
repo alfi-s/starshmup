@@ -8,7 +8,7 @@ export default class Bullet extends Sprite.class {
         this.height = 5;
         this.color = colors.indigo;
         if (props) {
-            this.damage = props.damage;
+            this.dmg = props.dmg;
             this.target = props.target;
         }
     }
