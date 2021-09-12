@@ -2,7 +2,7 @@ import { init, initKeys, keyMap, GameLoop, collides } from 'kontra';
 import colors from './colors';
 import Player from './player';
 import { bulletPool } from './bullet';
-import Enemy from './enemy';
+import Enemy, { SineEnemy } from './enemy';
 
 //Kontra initialisation
 let { canvas, context } = init();
@@ -19,27 +19,49 @@ let player = new Player({
     bulletTimerMax: 5
 });
 
-let enemy = new Enemy({
-    x: 500,
-    y: canvas.height / 2,
-    width: 50,
-    height: 50,
-    health: 100,
-    color: 'red'
-})
-export const gameLoop = GameLoop({
-    update: function () {
+let enemies = [];
+enemies.push(new SineEnemy({
+    x: 500, y: canvas.height / 2, width: 15, height: 15, color: 'red', speed: 2, amplitude: 100, frequency: 4, angleDisplacement: 3
+}))
+enemies.push(new SineEnemy({
+    x: 550, y: canvas.height / 2, width: 15, height: 15, color: 'red', speed: 2, amplitude: 100, frequency: 4, angleDisplacement: 2
+}))
+enemies.push(new SineEnemy({
+    x: 600, y: canvas.height / 2, width: 15, height: 15, color: 'red', speed: 2, amplitude: 100, frequency: 4, angleDisplacement: 1
+}))
+enemies.push(new SineEnemy({
+    x: 650, y: canvas.height / 2, width: 15, height: 15, color: 'red', speed: 2, amplitude: 100, frequency: 4, angleDisplacement: 0
+}))
 
+export const gameLoop = GameLoop({
+    update: function (dt) {
+        // Check bullet collision
         bulletPool.getAliveObjects().forEach(bullet => {
-            if (collides(bullet, enemy)) {
-                enemy.health -= bullet.damage;
-                bullet.ttl = 0;
+            if (bullet.target == 'player') {
+                if (collides(bullet, player)) {
+                    bullet.ttl = 0;
+                    player.health -= bullet.damage;
+                }
+            }
+            if (bullet.target == 'enemy') {
+                enemies.forEach(enemy => {
+                    if (collides(bullet, enemy)) {
+                        bullet.ttl = 0;
+                        enemy.damage(bullet.damage);
+                        console.log(enemy.health)
+                    }
+                })
             }
         })
 
-        player.update();
-        enemy.update();
+        // Update the player.
+        player.update(dt);
 
+        // Update the enemies
+        enemies = enemies.filter(enemy => enemy.isAlive());
+        enemies.forEach(enemy => enemy.update(dt));
+
+        // Update the bullet.s
         bulletPool.update();
     },
 
@@ -48,10 +70,10 @@ export const gameLoop = GameLoop({
         context.fillStyle = colors.bg;
         context.fillRect(0, 0, canvas.width, canvas.height);
 
+        bulletPool.render();
+
         // Render the player.
         player.render();
-
-        bulletPool.render();
-        if (enemy.isAlive()) enemy.render();
+        enemies.forEach(enemy => enemy.render());
     }
 });

@@ -6,17 +6,11 @@ export default class Bullet extends Sprite.class {
         super.init(props);
         this.width = 5;
         this.height = 5;
+        this.color = colors.indigo;
         if (props) {
             this.damage = props.damage;
+            this.target = props.target;
         }
-    }
-
-    draw() {
-        this.context.fillStyle = colors.indigo;
-        this.context.beginPath();
-        this.context.arc(0, 0, this.width, 0, 2 * Math.PI);
-        this.context.closePath();
-        this.context.fill();
     }
 
     isAlive() {

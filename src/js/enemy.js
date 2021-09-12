@@ -3,18 +3,34 @@ import { Sprite } from "kontra";
 export default class Enemy extends Sprite.class {
     constructor(props) {
         super(props);
-        this.health = props.health;
-        this.alive = true;
+        this.health = 0;
     }
 
-    update() {
-        if (this.health <= 0) {
-            this.alive = false;
-        }
+    damage(amount) {
+        this.health -= amount;
     }
 
     isAlive() {
-        return this.alive;
+        return this.health > 0;
+    }
+}
+
+export class SineEnemy extends Enemy {
+    constructor(props) {
+        super(props);
+        this.c = this.y;
+        this.dx = -this.speed;
+        this.t = 0;
+        this.health = 20;
     }
 
+    update(dt) {
+        this.t = this.t + dt > 2 * Math.PI ? 0 : this.t + dt;
+        this.y = this.amplitude * Math.sin((this.frequency * this.t) + this.angleDisplacement) + this.c;
+        this.advance();
+    }
+
+    isAlive() {
+        return super.isAlive() && this.x > -this.width;
+    }
 }

@@ -6,6 +6,7 @@ export default class Player extends Sprite.class {
     constructor(props) {
         super(props);
         this.type = 'player';
+        this.health = 100;
         this.speedLow = props.speedLow;
         this.speedHigh = props.speedHigh;
         this.bulletTimerMax = props.bulletTimerMax;
@@ -38,7 +39,8 @@ export default class Player extends Sprite.class {
                 x: this.x,
                 y: this.y,
                 dx: 14,
-                damage: 10
+                damage: 10,
+                target: 'enemy'
             })
             this.bulletTimer = this.bulletTimerMax;
         }
