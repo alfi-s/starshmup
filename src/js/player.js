@@ -106,6 +106,7 @@ export default class Player extends Sprite.class {
         this.context.moveTo(-this.width / 2, -this.height / 2);
         this.context.lineTo(this.width / 2, 0);
         this.context.lineTo(-this.width / 2, this.height / 2);
+        this.context.lineTo(-(this.width / 2) + 2, 0);
         this.context.closePath();
         this.context.fill();
     }
