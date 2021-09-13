@@ -7,7 +7,7 @@ export default class Enemy extends Sprite.class {
     }
 
     dmg(amount) {
-        this.health -= amount;
+        this.health = this.health - amount;
     }
 
     isAlive() {

@@ -6,7 +6,7 @@ export default class Bullet extends Sprite.class {
         super.init(props);
         this.width = 5;
         this.height = 5;
-        this.color = colors.indigo;
+        this.color = colors.skyblue;
         if (props) {
             this.dmg = props.dmg;
             this.target = props.target;
@@ -21,5 +21,5 @@ export default class Bullet extends Sprite.class {
 
 export const bulletPool = Pool({
     create: function () { return new Bullet },
-    maxSize: 2048
+    maxSize: 1000
 })
