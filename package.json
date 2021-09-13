@@ -5,10 +5,11 @@
   "private": "true",
   "scripts": {
     "start": "npm run build-dev & serve build",
-    "build": "npm run clean && npm run html && rollup -c",
-    "build-dev": "npm run clean && npm run html-file && rollup -c -m -w",
-    "clean": "rm -r build/*",
-    "html-file": "html-minifier src/index.html -o build/index.html --collapse-whitespace --minify-css true"
+    "build": "npm run clean && npm run html-file && npm run assets && rollup -c",
+    "build-dev": "npm run clean && npm run html-file && npm run assets && rollup -c -m -w",
+    "clean": "rm -r -f build/*",
+    "html-file": "html-minifier src/index.html -o build/index.html --collapse-whitespace --minify-css true",
+    "assets": "cp -R assets build/assets"
   },
   "author": "Alfi Sumadi",
   "license": "MIT",
