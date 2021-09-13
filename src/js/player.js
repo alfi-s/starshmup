@@ -12,10 +12,15 @@ export default class Player extends Sprite.class {
         this.lives = props.lives;
         this.speedLow = props.speedLow;
         this.speedHigh = props.speedHigh;
-        this.bulletTimerMax = props.bulletTimerMax;
+
+        this.bulletTimerHigh = props.bulletTimerHigh;
+        this.bulletTimerLow = props.bulletTimerLow;
+        this.bulletTimerMax = this.bulletTimerHigh;
         this.bulletTimer = this.bulletTimerMax;
+
         this.spawnTimerMax = 50;
         this.spawnTimer = 0;
+
         this.state = PlayerState.SPAWN;
     }
 
@@ -38,7 +43,15 @@ export default class Player extends Sprite.class {
 
     handleInput() {
         // handle the movement input
-        let movementSpeed = keyPressed('shift') ? this.speedLow : this.speedHigh;
+        let movementSpeed = null;
+        if (keyPressed('shift')) {
+            this.bulletTimerMax = this.bulletTimerHigh;
+            movementSpeed = this.speedLow;
+        } else {
+            this.bulletTimerMax = this.bulletTimerLow;
+            movementSpeed = this.speedHigh;
+        }
+
         if (keyPressed('up') && this.y > 0) {
             this.dy = -movementSpeed;
         } else if (keyPressed('down') && this.y <= this.context.canvas.height) {

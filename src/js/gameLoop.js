@@ -17,7 +17,8 @@ let player = new Player({
     height: 10,
     speedHigh: 4,
     speedLow: 2,
-    bulletTimerMax: 5
+    bulletTimerLow: 10,
+    bulletTimerHigh: 5
 });
 
 let enemies = [];
