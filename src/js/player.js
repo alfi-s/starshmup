@@ -9,7 +9,6 @@ export default class Player extends Sprite.class {
     constructor(props) {
         super(props);
         this.type = 'player';
-        this.health = 100;
         this.lives = props.lives;
         this.speedLow = props.speedLow;
         this.speedHigh = props.speedHigh;
@@ -72,14 +71,16 @@ export default class Player extends Sprite.class {
         // handle firing bullets
         this.bulletTimer = this.bulletTimer > 0 ? this.bulletTimer - 1 : 0;
         if (keyPressed('space') && this.bulletTimer <= 0) {
-            console.log(this.bulletTimer);
             playLaserSound();
             bulletPool.get({
                 x: this.x,
                 y: this.y,
+                width: 5,
+                height: 5,
                 dx: 14,
                 dmg: 10,
-                target: 'enemy'
+                target: 'enemy',
+                color: colors.skyblue
             });
             this.bulletTimer = this.bulletTimerMax;
         }
@@ -112,7 +113,7 @@ export default class Player extends Sprite.class {
     }
 
     isAlive() {
-        return this.health > 0;
+        return this.state != PlayerState.DEAD;
     }
 }
 

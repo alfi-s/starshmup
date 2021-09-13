@@ -4,9 +4,6 @@ import colors from './colors';
 export default class Bullet extends Sprite.class {
     init(props) {
         super.init(props);
-        this.width = 5;
-        this.height = 5;
-        this.color = colors.skyblue;
         if (props) {
             this.dmg = props.dmg;
             this.target = props.target;
