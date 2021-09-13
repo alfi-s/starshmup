@@ -92,7 +92,7 @@ export class Tanky extends Enemy {
     }
 }
 
-export class SineEnemy extends Enemy {
+export class Sine extends Enemy {
     constructor(props) {
         super(props);
         this.c = this.y;
@@ -117,17 +117,82 @@ export class SineEnemy extends Enemy {
     }
 }
 
-export function spawnSineWave(x, y, n, amplitude, frequency, speed, spacing) {
+export function spawnSineWave(x, y, n) {
     let wave = [];
     for (let i = 0; i < n; i++) {
-        wave.push(new SineEnemy({
-            x: x + i * spacing, y: y,
-            amplitude: amplitude,
-            frequency: frequency,
-            angleDisplacement: i * spacing,
-            speed: speed,
+        wave.push(new Sine({
+            x: x + i * 50, y: y,
+            amplitude: 100,
+            frequency: 2,
+            angleDisplacement: i * 50,
+            speed: 1.5,
             color: 'orange'
         }));
     }
     return wave;
+}
+
+export class Fighter extends Enemy {
+    constructor(props) {
+        super(props);
+        this.speed = 1;
+        this.dx = -this.speed;
+        this.health = 60;
+        this.width = 30;
+        this.height = 30;
+
+        this.coolDownMax = 100;
+        this.coolDown = this.coolDownMax;
+        this.fireTimerMax = 10;
+        this.fireTimer = this.fireTimerMax;
+        this.fireCounter = 1;
+        this.points = 50;
+    }
+
+    update() {
+        if (this.coolDown == 0) {
+            if (this.fireTimer == 0) {
+                bulletPool.get({
+                    x: this.x - this.width / 2, y: this.y,
+                    width: 10,
+                    height: 10,
+                    dmg: 10,
+                    target: 'player',
+                    color: 'red',
+                    dx: -4
+                })
+                bulletPool.get({
+                    x: this.x - this.width / 2, y: this.y + this.height,
+                    width: 10,
+                    height: 10,
+                    dmg: 10,
+                    target: 'player',
+                    color: 'red',
+                    dx: -4
+                })
+
+                this.fireTimer = this.fireTimerMax;
+                this.fireCounter--;
+            } else {
+                this.fireTimer--;
+            }
+            if (this.fireCounter === 0) {
+                this.fireCounter = 1;
+                this.coolDown = this.coolDownMax;
+            }
+        } else {
+            this.coolDown--;
+        }
+        this.advance();
+    }
+
+    draw() {
+        this.context.fillStyle = 'orange';
+        this.context.beginPath();
+        this.context.moveTo(this.width, 0);
+        this.context.lineTo(-this.width, this.height / 2);
+        this.context.lineTo(this.width, this.height);
+        this.context.closePath();
+        this.context.fill();
+    }
 }

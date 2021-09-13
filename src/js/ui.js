@@ -21,3 +21,13 @@ export function livesUI(lives, canvas) {
         textAlign: 'right'
     })
 }
+
+export const gameOverUI = (canvas) => Text({
+    text: `Game Over`,
+    font: '100px Trebuchet MS',
+    color: 'white',
+    anchor: { x: 0.5, y: 0.5 },
+    y: canvas.height / 2,
+    x: canvas.width / 2,
+    textAlign: 'center'
+})

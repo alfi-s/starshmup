@@ -3,8 +3,8 @@ import colors from './colors';
 import Player, { PlayerState } from './player';
 import { bulletPool } from './bullet';
 import { particlePool, explosion, initStars, starPool } from './particle';
-import { Tanky, spawnSineWave } from './enemy';
-import { livesUI, scoreUI } from './ui';
+import { Tanky, spawnSineWave, Fighter } from './enemy';
+import { gameOverUI, livesUI, scoreUI } from './ui';
 
 // Kontra initialisation
 export let { canvas, context } = init();
@@ -16,6 +16,7 @@ function collides(a, b) {
 }
 
 let score = 0;
+let gameOver = false;
 
 let player = new Player({
     x: -90,
@@ -30,7 +31,7 @@ let player = new Player({
 });
 
 let enemies = [];
-enemies.push(new Tanky({
+enemies.push(new Fighter({
     x: canvas.width, y: canvas.height / 2, speed: 1, color: 'orange'
 }))
 
@@ -76,11 +77,15 @@ export default GameLoop({
         });
 
         // Update the player.
-        player.update(dt);
-        if (!player.isAlive()) {
-            explosion(player.x, player.y, colors.cyan, 200)
-            player.lives--;
-            player.respawn();
+        if (player.lives > 0) {
+            player.update(dt);
+            if (!player.isAlive()) {
+                explosion(player.x, player.y, colors.cyan, 200)
+                player.lives--;
+                player.respawn();
+            }
+        } else {
+            gameOver = true;
         }
 
         // Update the bulletPool
@@ -114,5 +119,8 @@ export default GameLoop({
 
         scoreUI(score, canvas).render();
         livesUI(player.lives, canvas).render();
+        if (gameOver) {
+            gameOverUI(canvas).render();
+        }
     }
 });
