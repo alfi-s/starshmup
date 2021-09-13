@@ -104,10 +104,10 @@ export default class Player extends Sprite.class {
     draw() {
         this.context.fillStyle = colors.cyan;
         this.context.beginPath();
-        this.context.moveTo(-this.width / 2, -this.height / 2);
-        this.context.lineTo(this.width / 2, 0);
-        this.context.lineTo(-this.width / 2, this.height / 2);
-        this.context.lineTo(-(this.width / 2) + 2, 0);
+        this.context.moveTo(0, 0);
+        this.context.lineTo(this.width, this.height / 2);
+        this.context.lineTo(0, this.height);
+        this.context.lineTo(2, this.height / 2);
         this.context.closePath();
         this.context.fill();
     }
