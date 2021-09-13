@@ -1,6 +1,7 @@
 import { Sprite, keyPressed, lerp } from "kontra";
 import { bulletPool } from './bullet'
 import colors from './colors';
+import { playLaserSound } from './audio'
 
 export const PlayerState = { SPAWN: 1, ALIVE: 2, DEAD: 3 }
 
@@ -69,15 +70,17 @@ export default class Player extends Sprite.class {
         }
 
         // handle firing bullets
-        this.bulletTimer--;
+        this.bulletTimer = this.bulletTimer > 0 ? this.bulletTimer - 1 : 0;
         if (keyPressed('space') && this.bulletTimer <= 0) {
+            console.log(this.bulletTimer);
+            playLaserSound();
             bulletPool.get({
                 x: this.x,
                 y: this.y,
                 dx: 14,
                 dmg: 10,
                 target: 'enemy'
-            })
+            });
             this.bulletTimer = this.bulletTimerMax;
         }
     }

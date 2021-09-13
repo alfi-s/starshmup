@@ -1,4 +1,5 @@
 import { Pool, Sprite, lerp } from "kontra";
+import { playExplosionSound } from "./audio";
 import colors from "./colors";
 
 export default class Particle extends Sprite.class {
@@ -28,6 +29,7 @@ export const starPool = Pool({
     maxSize: 100
 })
 export function explosion(x, y, color, numberOfParticles) {
+    playExplosionSound();
     for (let i = 0; i < numberOfParticles; i++) {
         particlePool.get({
             x: x, y: y,
