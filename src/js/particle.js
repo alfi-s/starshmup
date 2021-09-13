@@ -57,7 +57,7 @@ export function initStars(w, h) {
     for (let i = 0; i < 100; i++) {
         starPool.get({
             x: Math.random() * w, y: Math.random() * h,
-            dx: -0.5,
+            dx: -3,
             width: 3,
             height: 3,
             color: Math.random() > 0.5 ? colors.violet : colors.indigo,

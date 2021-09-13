@@ -23,10 +23,11 @@ export class Tanky extends Enemy {
         this.speed = 0.5
         this.dx = -this.speed;
         this.health = 200;
-        this.width = 50;
-        this.height = 50;
+        this.width = 100;
+        this.height = 100;
+        this.color = 'orange';
 
-        this.coolDownMax = 60;
+        this.coolDownMax = 100;
         this.coolDown = this.coolDownMax;
         this.fireTimerMax = 10;
         this.fireTimer = this.fireTimerMax;
@@ -90,6 +91,10 @@ export class Tanky extends Enemy {
         }
         this.advance();
     }
+}
+
+export function spawnTanky(x, y) {
+    return [new Tanky({ x: x, y: y })]
 }
 
 export class Sine extends Enemy {
@@ -195,4 +200,8 @@ export class Fighter extends Enemy {
         this.context.closePath();
         this.context.fill();
     }
+}
+
+export function spawnFighter(x, y) {
+    return [new Fighter({ x: x, y: y })]
 }

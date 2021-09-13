@@ -3,7 +3,7 @@ import colors from './colors';
 import Player, { PlayerState } from './player';
 import { bulletPool } from './bullet';
 import { particlePool, explosion, initStars, starPool } from './particle';
-import { Tanky, spawnSineWave, Fighter } from './enemy';
+import { spawnTanky, spawnSineWave, spawnFighter } from './enemy';
 import { gameOverUI, livesUI, scoreUI } from './ui';
 
 // Kontra initialisation
@@ -21,8 +21,8 @@ let gameOver = false;
 let player = new Player({
     x: -90,
     y: (canvas.height / 2) + 100,
-    width: 20,
-    height: 10,
+    width: 40,
+    height: 35,
     speedHigh: 5,
     speedLow: 2,
     bulletTimerLow: 11,
@@ -31,18 +31,92 @@ let player = new Player({
 });
 
 let enemies = [];
-enemies.push(new Fighter({
-    x: canvas.width, y: canvas.height / 2, speed: 1, color: 'orange'
-}))
 
-enemies = enemies.concat(spawnSineWave(canvas.width + 10, (canvas.height / 2) + 100, 6, 100, 2, 1.5, 50));
+const enemySpawner = {
+    spawnTimerMax: 500, spawnTimer: 0,
+    countdown: function () {
+        if (this.spawnTimer == 0) {
+            this.spawn();
+            this.spawnTimer = this.spawnTimerMax;
+        } else {
+            this.spawnTimer--;
+        }
+    },
+    spawn: function () {
+
+        if (score < 100) {
+            // sine
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+        } else if (score < 200) {
+            //sine + fight
+            let rand = Math.random();
+
+            if (rand > 0.5) {
+                enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            } else {
+                enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+                enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            }
+        } else if (score < 350) {
+            //increase freq
+            this.spawnTimerMax = 400;
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+        } else if (score < 600) {
+            //tanky + sine
+            this.spawnTimerMax = 500;
+            let rand = Math.random();
+            console.log(rand)
+            if (rand > 0.2) {
+                enemies = enemies.concat(spawnTanky(canvas.width + 50, Math.random() * (canvas.height - 100)))
+                enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            } else {
+                enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+                enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+                enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            }
+        } else if (score < 1000) {
+            //tanky + sine + fight
+            enemies = enemies.concat(spawnTanky(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            console.log('5')
+        } else if (score < 1300) {
+            //increase frequency
+            this.spawnTimerMax = 370;
+            enemies = enemies.concat(spawnTanky(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            console.log('6')
+        } else {
+            //increase frequency
+            this.spawnTimerMax = 300;
+            enemies = enemies.concat(spawnTanky(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnTanky(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnFighter(canvas.width + 50, Math.random() * canvas.height))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            enemies = enemies.concat(spawnSineWave(canvas.width + 50, Math.random() * canvas.height, Math.floor(Math.random() * (8 - 3 + 1) + 3)))
+            console.log('7')
+        }
+    },
+    reset: function () {
+        this.spawnTimer = 0;
+        this.spawnTimerMax = 500;
+    }
+}
 
 initStars(canvas.width, canvas.height);
 
 // Main game loop
 export default GameLoop({
-
     update: function (dt) {
+
+        enemySpawner.countdown();
         // Handle bullet collision.
         bulletPool.getAliveObjects().forEach(bullet => {
             if (bullet.target == 'player') {
@@ -57,7 +131,7 @@ export default GameLoop({
                         bullet.ttl = 0;
                         enemy.dmg(bullet.dmg);
                         if (!enemy.isAlive()) {
-                            explosion(enemy.x, enemy.y, 'orange', 100);
+                            explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 'orange', 100);
                             score += enemy.points;
                         }
                     }
@@ -70,7 +144,7 @@ export default GameLoop({
         enemies.forEach(enemy => {
             if (collides(enemy, player) && player.state == PlayerState.ALIVE) {
                 player.state = PlayerState.DEAD;
-                explosion(enemy.x, enemy.y, 'orange', 100);
+                explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 'orange', 100);
                 enemy.health = 0;
             }
             enemy.update(dt)
@@ -94,7 +168,7 @@ export default GameLoop({
         starPool.update();
         starPool.get({
             x: canvas.width + 1, y: Math.random() * canvas.height,
-            dx: -0.5,
+            dx: -3,
             width: 3,
             height: 3,
             color: Math.random() > 0.5 ? colors.violet : colors.indigo,

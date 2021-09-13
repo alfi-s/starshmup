@@ -74,7 +74,7 @@ export default class Player extends Sprite.class {
             playLaserSound();
             bulletPool.get({
                 x: this.x,
-                y: this.y,
+                y: this.y + this.height / 2,
                 width: 5,
                 height: 5,
                 dx: 14,
