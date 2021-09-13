@@ -146,7 +146,7 @@ export class Fighter extends Enemy {
         this.fireTimerMax = 10;
         this.fireTimer = this.fireTimerMax;
         this.fireCounter = 1;
-        this.points = 50;
+        this.points = 35;
     }
 
     update() {
